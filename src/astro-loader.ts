@@ -5,7 +5,7 @@ import {
   checkEnvironmentVariables,
   fetchFromStrapi,
   inferSchemaFromResponse,
-} from "./utils";
+} from "../utils";
 
 /**
  * Creates a Strapi content loader for Astro
@@ -64,17 +64,7 @@ export function strapiLoader({
         let hasMore = true;
 
         while (hasMore) {
-          const data = await fetchFromStrapi(
-            `/api/${contentType}s`,
-            strapiUrl,
-            {
-              ...params,
-              pagination: {
-                page,
-                pageSize: pageSize,
-              },
-            }
-          );
+          const data = await fetchFromStrapi(contentType, params);
 
           content.push(...data?.data);
 
@@ -121,8 +111,7 @@ export function strapiLoader({
     schema: async () => {
       // Fetch with deep population
       const response = await fetchFromStrapi(
-        `/api/${contentType}s`,
-        strapiUrl,
+        contentType,
         {
           ...params,
           pagination: {
